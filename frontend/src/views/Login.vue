@@ -63,7 +63,7 @@ export default {
         if (user.roleString === "admin") {
           this.$router.push({ name: "UserList" }); 
         } else {
-          this.$router.push({ name: "Approval" }); 
+          this.$router.push({ name: "BudgetRequest" }); 
         }
       } catch (error) {
         console.error("Login failed:", error);

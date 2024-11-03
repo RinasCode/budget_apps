@@ -40,20 +40,19 @@ export default {
   methods: {
     async fetchApprovals() {
       try {
-        const response = await fetch('http://localhost:3000/approvals'); 
+        const response = await fetch("http://localhost:3000/approvals");
         this.approvals = await response.json();
       } catch (error) {
-        console.error('Error fetching approvals:', error);
+        console.error("Error fetching approvals:", error);
       }
     },
     logout() {
       localStorage.removeItem("user");
 
-      this.$router.push({ name: 'Login' });
+      this.$router.push({ name: "Login" });
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
