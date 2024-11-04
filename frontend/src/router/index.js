@@ -4,7 +4,8 @@ import Register from "../views/Register.vue";
 import Approval from "../views/Approval.vue";
 import UserList from "../views/UserList.vue";
 import AddUser from "../views/AddUser.vue";
-import BudgetRequest from "../views/BudgetRequest.vue"; // Import halaman BudgetRequest
+import BudgetRequestList from "../views/BudgetRequest.vue"; 
+import AddBudget from "../views/AddBudget.vue";
 
 const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -65,8 +66,8 @@ const routes = [
   },
   {
     path: "/budget-request",
-    name: "BudgetRequest",
-    component: BudgetRequest,
+    name: "BudgetRequestList",
+    component: BudgetRequestList,
     beforeEnter: (to, from, next) => {
       if (isAuthenticated()) {
         next();
@@ -74,6 +75,11 @@ const routes = [
         next({ name: "Login" });
       }
     },
+  },
+  {
+    path: "/add-budget-request",
+    name: "AddBudgetRequest",
+    component: AddBudget,
   },
 ];
 

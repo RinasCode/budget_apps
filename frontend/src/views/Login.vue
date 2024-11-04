@@ -1,31 +1,47 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen">
-    <h1 class="text-2xl mb-4">Login</h1>
-    <form @submit.prevent="handleLogin" class="w-1/3">
-      <div class="mb-4">
-        <label for="email" class="block mb-2">Email</label>
-        <input
-          type="text"
-          v-model="emailString"
-          id="email"
-          required
-          class="border p-2 w-full"
-        />
+  <div class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-semibold text-gray-700">Login</h1>
+        <p class="text-gray-500">Login to manage your budget requests</p>
       </div>
-      <div class="mb-4">
-        <label for="password" class="block mb-2">Password</label>
-        <input
-          type="password"
-          v-model="passwordString"
-          id="password"
-          required
-          class="border p-2 w-full"
-        />
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2">
-        Login
-      </button>
-    </form>
+      <form @submit.prevent="handleLogin">
+        <div class="mb-4 relative">
+          <label for="email" class="block text-gray-700 mb-2">Email</label>
+          <div class="flex items-center border rounded-lg p-2">
+            <i class="fas fa-envelope text-gray-400 mr-2"></i>
+            <input
+              type="text"
+              v-model="emailString"
+              id="email"
+              required
+              placeholder="Enter your email"
+              class="w-full outline-none text-gray-700"
+            />
+          </div>
+        </div>
+        <div class="mb-6 relative">
+          <label for="password" class="block text-gray-700 mb-2">Password</label>
+          <div class="flex items-center border rounded-lg p-2">
+            <i class="fas fa-lock text-gray-400 mr-2"></i>
+            <input
+              type="password"
+              v-model="passwordString"
+              id="password"
+              required
+              placeholder="Enter your password"
+              class="w-full outline-none text-gray-700"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition duration-200"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -37,8 +53,8 @@ import "toastify-js/src/toastify.css";
 export default {
   data() {
     return {
-      emailString: "", 
-      passwordString: "", 
+      emailString: "",
+      passwordString: "",
     };
   },
   methods: {
@@ -48,11 +64,11 @@ export default {
           emailString: this.emailString,
           passwordString: this.passwordString,
         });
-        console.log('ini respon data',response.data);
+        localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
         Toastify({
-          text: "Login berhasil!",
+          text: "Login successful!",
           duration: 3000,
           gravity: "top",
           position: "right",
@@ -61,14 +77,14 @@ export default {
 
         const user = response.data.user;
         if (user.roleString === "admin") {
-          this.$router.push({ name: "UserList" }); 
+          this.$router.push({ name: "UserList" });
         } else {
-          this.$router.push({ name: "BudgetRequest" }); 
+          this.$router.push({ name: "BudgetRequest" });
         }
       } catch (error) {
         console.error("Login failed:", error);
         Toastify({
-          text: "Login gagal. Silakan coba lagi.",
+          text: "Login failed. Please try again.",
           duration: 3000,
           gravity: "top",
           position: "right",
@@ -79,3 +95,14 @@ export default {
   },
 };
 </script>
+
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+body {
+  background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080');
+  background-size: cover;
+  background-position: center;
+}
+
+</style>
