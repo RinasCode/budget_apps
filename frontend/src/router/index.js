@@ -6,6 +6,7 @@ import UserList from "../views/UserList.vue";
 import AddUser from "../views/AddUser.vue";
 import BudgetRequestList from "../views/BudgetRequest.vue"; 
 import AddBudget from "../views/AddBudget.vue";
+import AllBudgetRequest from "../views/AllBudgetRequest.vue";
 
 const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -68,6 +69,18 @@ const routes = [
     path: "/budget-request",
     name: "BudgetRequestList",
     component: BudgetRequestList,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next();
+      } else {
+        next({ name: "Login" });
+      }
+    },
+  },
+  {
+    path: "/all-budget-request",
+    name: "AllBudgetRequest",
+    component: AllBudgetRequest,
     beforeEnter: (to, from, next) => {
       if (isAuthenticated()) {
         next();

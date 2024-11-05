@@ -57,12 +57,13 @@
           console.error("Error fetching budget requests:", error);
         }
       };
-  
+      
       const addBudgetRequest = () => {
         router.push("/add-budget-request"); 
       };
   
       const logout = () => {
+        localStorage.removeItem("user");
         localStorage.removeItem("token"); 
         router.push("/");
       };

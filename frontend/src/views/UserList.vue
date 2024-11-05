@@ -77,6 +77,7 @@
       
       const logout = () => {
         localStorage.removeItem("user"); 
+        localStorage.removeItem("token");
         router.push({ name: "Login" }); 
         console.log("User logged out");
       };
