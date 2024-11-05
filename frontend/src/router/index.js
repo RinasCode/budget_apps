@@ -4,9 +4,11 @@ import Register from "../views/Register.vue";
 import Approval from "../views/Approval.vue";
 import UserList from "../views/UserList.vue";
 import AddUser from "../views/AddUser.vue";
-import BudgetRequestList from "../views/BudgetRequest.vue"; 
+import BudgetRequestList from "../views/BudgetRequest.vue";
 import AddBudget from "../views/AddBudget.vue";
 import AllBudgetRequest from "../views/AllBudgetRequest.vue";
+import CreateApproval from "../views/CreateApproval.vue";
+import EditBudgetRequest from "../views/EditBudgetRequest.VUE";
 
 const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -89,6 +91,30 @@ const routes = [
       }
     },
   },
+  {
+    path: "/create-approval/:id",
+    name: "CreateApproval",
+    component: CreateApproval,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next();
+      } else {
+        next({ name: "Login" });
+      }
+    },
+  },
+  {
+    path: "/edit-budget-request/:id",
+    name: "EditBudgetRequest",
+    component: EditBudgetRequest,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next();
+      } else {
+        next({ name: "Login" });
+      }
+    },
+  },  
   {
     path: "/add-budget-request",
     name: "AddBudgetRequest",

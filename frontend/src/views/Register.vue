@@ -44,7 +44,7 @@ export default {
           username: this.username,
           password: this.password
         });
-        console.log(response.data); // Tampilkan response dari backend
+        console.log(response.data); 
       } catch (error) {
         console.error('Registration failed:', error);
       }

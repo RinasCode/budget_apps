@@ -1,80 +1,102 @@
 <template>
-    <div>
-      <h1 class="text-2xl font-bold mb-4">Budget Requests</h1>
-      <button @click="logout" class="bg-red-500 text-white rounded px-4 py-2 mb-4">Logout</button>
-      <table class="min-w-full border-collapse border border-gray-300">
+  <div class="p-6 bg-gray-50 min-h-screen">
+    <h1 class="text-3xl font-semibold mb-6 text-gray-800">Budget Requests</h1>
+    <button 
+      @click="logout" 
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded px-4 py-2 mb-6 shadow-md"
+    >
+      Logout
+    </button>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
         <thead>
-          <tr class="bg-gray-200">
-            <th class="border border-gray-300 px-4 py-2">ID</th>
-            <th class="border border-gray-300 px-4 py-2">User ID</th>
-            <th class="border border-gray-300 px-4 py-2">Request Date</th>
-            <th class="border border-gray-300 px-4 py-2">Amount</th>
-            <th class="border border-gray-300 px-4 py-2">Reason</th>
-            <th class="border border-gray-300 px-4 py-2">Status</th>
-            <th class="border border-gray-300 px-4 py-2">Actions</th>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="border border-gray-300 px-4 py-3 text-left">ID</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">User ID</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">Request Date</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">Amount</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">Reason</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">Status</th>
+            <th class="border border-gray-300 px-4 py-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="request in budgetRequests" :key="request.idString" class="hover:bg-gray-100">
-            <td class="border border-gray-300 px-4 py-2">{{ request.idString }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ request.userIdString }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ new Date(request.requestDate).toLocaleDateString() }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ request.amount }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ request.reason }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ request.status }}</td>
-            <td class="border border-gray-300 px-4 py-2">
-              <button @click="viewDetails(request.idString)" class="bg-blue-500 text-white rounded px-4 py-1">Detail</button>
+          <tr 
+            v-for="request in budgetRequests" 
+            :key="request.idString" 
+            class="hover:bg-gray-100 transition-colors"
+          >
+            <td class="border border-gray-300 px-4 py-3">{{ request.idString }}</td>
+            <td class="border border-gray-300 px-4 py-3">{{ request.userIdString }}</td>
+            <td class="border border-gray-300 px-4 py-3">{{ new Date(request.requestDate).toLocaleDateString() }}</td>
+            <td class="border border-gray-300 px-4 py-3">{{ request.amount }}</td>
+            <td class="border border-gray-300 px-4 py-3">{{ request.reason }}</td>
+            <td class="border border-gray-300 px-4 py-3">{{ request.status }}</td>
+            <td class="border border-gray-300 px-4 py-3">
+              <button 
+                @click="viewDetails(request.idString)" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded px-3 py-1 shadow"
+              >
+                Detail
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
-  
-  export default {
-    setup() {
-      const budgetRequests = ref([]);
-      const router = useRouter();
-  
-      const fetchBudgetRequests = async () => {
-        try {
-          const response = await axios.get('http://localhost:3000/budget-request', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          console.log('Data fetched:',response.data);
-          
-          budgetRequests.value = response.data;
-        } catch (error) {
-          console.error('Error fetching budget requests:', error);
-        }
-      };
-  
-      const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user'); 
-        router.push({ name: 'Login' }); 
-      };
-  
-      const viewDetails = (id) => {
-        router.push({ name: 'Approval', params: { id } });
-      };
-  
-      onMounted(fetchBudgetRequests);
-  
-      return {
-        budgetRequests,
-        viewDetails,
-        logout,
-      };
-    },
-  };
-  </script>
+  </div>
+</template>
 
-  
+<script>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+export default {
+  setup() {
+    const budgetRequests = ref([]);
+    const router = useRouter();
+
+    const fetchBudgetRequests = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/budget-requests', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        budgetRequests.value = response.data;
+      } catch (error) {
+        console.error('Error fetching budget requests:', error);
+      }
+    };
+
+    const logout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user'); 
+      router.push({ name: 'Login' }); 
+    };
+
+    const viewDetails = (id) => {
+      router.push({ name: 'CreateApproval', params: { id } });
+    };
+
+    onMounted(fetchBudgetRequests);
+
+    return {
+      budgetRequests,
+      viewDetails,
+      logout,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.min-w-full {
+  padding: 1rem;
+}
+</style>
