@@ -20,7 +20,7 @@
         <p>Reason: {{ request.reason }}</p>
         <p>Status: {{ request.status }}</p>
         <button
-          v-if="request.status === 'reject' && isEmployeeLevelOne"
+          v-if="request.status ==='reject-line2'||request.status ==='reject-line3'||request.status ==='reject-line4' || request.status ==='reject-line5' && isEmployeeLevelOne"
           @click="editBudgetRequest(request)"
           class="btn btn-warning mt-2"
         >

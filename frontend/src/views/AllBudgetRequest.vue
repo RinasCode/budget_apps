@@ -55,16 +55,14 @@ import { useRouter } from 'vue-router';
 export default {
   setup() {
     const budgetRequests = ref([]);
-    const user = JSON.parse(localStorage.getItem('user')); // Ambil data user dari localStorage
+    const user = JSON.parse(localStorage.getItem('user')); 
     const router = useRouter();
 
-    // Fungsi untuk fetch budget requests berdasarkan level
     const fetchBudgetRequests = async () => {
       try {
         let endpoint = 'http://localhost:3000/budget-requests';
         let params = {};
 
-        // Menyesuaikan fetch berdasarkan level user
         if (user.levelNumber === 2) {
           params.status = 'pending';
         } else if (user.levelNumber === 3) {
@@ -79,7 +77,7 @@ export default {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          params: params // Menambahkan query params untuk filter status
+          params: params 
         });
 
         budgetRequests.value = response.data;
@@ -88,19 +86,16 @@ export default {
       }
     };
 
-    // Filtered budget requests berdasarkan level pengguna
     const filteredBudgetRequests = computed(() => {
       return budgetRequests.value;
     });
 
-    // Logout handler
     const logout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user'); 
       router.push({ name: 'Login' }); 
     };
 
-    // Untuk melihat detail permintaan anggaran
     const viewDetails = (id) => {
       router.push({ name: 'CreateApproval', params: { id } });
     };
