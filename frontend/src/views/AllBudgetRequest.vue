@@ -22,7 +22,7 @@
         </thead>
         <tbody>
           <tr 
-            v-for="request in budgetRequests" 
+            v-for="request in filteredBudgetRequests" 
             :key="request.idString" 
             class="hover:bg-gray-100 transition-colors"
           >
@@ -49,33 +49,58 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const budgetRequests = ref([]);
+    const user = JSON.parse(localStorage.getItem('user')); // Ambil data user dari localStorage
     const router = useRouter();
 
+    // Fungsi untuk fetch budget requests berdasarkan level
     const fetchBudgetRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/budget-requests', {
+        let endpoint = 'http://localhost:3000/budget-requests';
+        let params = {};
+
+        // Menyesuaikan fetch berdasarkan level user
+        if (user.levelNumber === 2) {
+          params.status = 'pending';
+        } else if (user.levelNumber === 3) {
+          params.status = 'approved-line2';
+        } else if (user.levelNumber === 4) {
+          params.status = 'approved-line3';
+        } else if (user.levelNumber === 5) {
+          params.status = 'approved-line4';
+        }
+
+        const response = await axios.get(endpoint, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+          },
+          params: params // Menambahkan query params untuk filter status
         });
+
         budgetRequests.value = response.data;
       } catch (error) {
         console.error('Error fetching budget requests:', error);
       }
     };
 
+    // Filtered budget requests berdasarkan level pengguna
+    const filteredBudgetRequests = computed(() => {
+      return budgetRequests.value;
+    });
+
+    // Logout handler
     const logout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user'); 
       router.push({ name: 'Login' }); 
     };
 
+    // Untuk melihat detail permintaan anggaran
     const viewDetails = (id) => {
       router.push({ name: 'CreateApproval', params: { id } });
     };
@@ -83,7 +108,7 @@ export default {
     onMounted(fetchBudgetRequests);
 
     return {
-      budgetRequests,
+      filteredBudgetRequests,
       viewDetails,
       logout,
     };
