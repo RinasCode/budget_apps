@@ -2,114 +2,67 @@
   <div class="max-w-xl mx-auto mt-8 p-6 bg-white shadow rounded-lg">
     <h2 class="text-2xl font-semibold mb-4 text-center">Edit Budget Request</h2>
     <form @submit.prevent="handleSubmit">
+      <!-- Department -->
       <div class="mb-4">
-        <label for="departmentID" class="block mb-1 font-medium"
-          >Department</label
-        >
-        <select
-          v-model="form.departmentIDString"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-        >
+        <label for="departmentID" class="block mb-1 font-medium">Department</label>
+        <select v-model="form.departmentIDString" required class="border border-gray-300 p-2 w-full rounded">
           <option value="dept1">dept1</option>
           <option value="dept2">dept2</option>
           <option value="dept3">dept3</option>
         </select>
       </div>
 
+      <!-- Category -->
       <div class="mb-4">
         <label for="categoryID" class="block mb-1 font-medium">Category</label>
-        <select
-          v-model="form.categoryIDString"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-        >
+        <select v-model="form.categoryIDString" required class="border border-gray-300 p-2 w-full rounded">
           <option value="cat1">cat1</option>
           <option value="cat2">cat2</option>
         </select>
       </div>
 
+      <!-- Request Date -->
       <div class="mb-4">
-        <label for="requestDate" class="block mb-1 font-medium"
-          >Request Date</label
-        >
-        <input
-          type="date"
-          v-model="form.requestDate"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-        />
+        <label for="requestDate" class="block mb-1 font-medium">Request Date</label>
+        <input type="date" v-model="form.requestDate" required class="border border-gray-300 p-2 w-full rounded" />
       </div>
 
+      <!-- Amount -->
       <div class="mb-4">
         <label for="amount" class="block mb-1 font-medium">Amount</label>
-        <input
-          type="number"
-          v-model="form.amount"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-          @input="updateTotalAmount"
-        />
+        <input type="number" v-model="form.amount" required class="border border-gray-300 p-2 w-full rounded" @input="updateTotalAmount" />
       </div>
 
+      <!-- Total Amount -->
       <div class="mb-4">
-        <label for="totalAmount" class="block mb-1 font-medium"
-          >Total Amount</label
-        >
-        <input
-          type="text"
-          :value="totalAmount"
-          readonly
-          class="border border-gray-300 p-2 w-full rounded bg-gray-100 cursor-not-allowed"
-        />
+        <label for="totalAmount" class="block mb-1 font-medium">Total Amount</label>
+        <input type="text" :value="totalAmount" readonly class="border border-gray-300 p-2 w-full rounded bg-gray-100 cursor-not-allowed" />
       </div>
 
+      <!-- Reason -->
       <div class="mb-4">
         <label for="reason" class="block mb-1 font-medium">Reason</label>
-        <textarea
-          v-model="form.reason"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-          rows="4"
-        ></textarea>
+        <textarea v-model="form.reason" required class="border border-gray-300 p-2 w-full rounded" rows="4"></textarea>
       </div>
 
+      <!-- Expected Date -->
       <div class="mb-4">
-        <label for="expectedDate" class="block mb-1 font-medium"
-          >Expected Date</label
-        >
-        <input
-          type="date"
-          v-model="form.expectedDate"
-          required
-          class="border border-gray-300 p-2 w-full rounded"
-        />
+        <label for="expectedDate" class="block mb-1 font-medium">Expected Date</label>
+        <input type="date" v-model="form.expectedDate" required class="border border-gray-300 p-2 w-full rounded" />
       </div>
 
+      <!-- Attachment -->
       <div class="mb-4">
-        <label for="attachment" class="block mb-1 font-medium"
-          >Attachment</label
-        >
-        <input
-          type="file"
-          @change="handleFileUpload"
-          accept="image/*"
-          class="border border-gray-300 p-2 w-full rounded"
-        />
+        <label for="attachment" class="block mb-1 font-medium">Attachment</label>
+        <input type="file" @change="handleFileUpload" accept="image/*" class="border border-gray-300 p-2 w-full rounded" />
       </div>
 
-      <button
-        type="submit"
-        class="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition duration-200"
-      >
+      <button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition duration-200">
         Update Request
       </button>
     </form>
 
-    <router-link
-      to="/budget-request"
-      class="mt-4 block text-center text-blue-500 hover:underline"
-    >
+    <router-link to="/budget-request" class="mt-4 block text-center text-blue-500 hover:underline">
       Back to Budget Requests
     </router-link>
   </div>
@@ -124,6 +77,7 @@ import { useRoute, useRouter } from "vue-router";
 
 export default {
   setup() {
+    // Inisialisasi form dengan data default
     const form = ref({
       budgetRequestIdString: "",
       departmentIDString: "",
@@ -140,6 +94,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
+    // Mengambil data Budget Request berdasarkan ID dari route params
     const fetchBudgetRequest = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -157,15 +112,16 @@ export default {
 
         console.log("Data fetched:", response.data);
 
+        // Mengisi form dengan data dari API
         form.value = {
           budgetRequestIdString: response.data.idString,
           departmentIDString: response.data.departmentIDString,
           categoryIDString: response.data.categoryIDString,
-          requestDate: response.data.requestDate.split("T")[0],
+          requestDate: response.data.requestDate.split("T")[0], // Format tanggal
           amount: response.data.amount,
           reason: response.data.reason,
           status: response.data.status,
-          expectedDate: response.data.expectedDate.split("T")[0],
+          expectedDate: response.data.expectedDate.split("T")[0], // Format tanggal
           attachmentURL: response.data.attachmentURL,
         };
         totalAmount.value = response.data.amount;
@@ -181,14 +137,17 @@ export default {
       }
     };
 
+    // Menangani file upload
     const handleFileUpload = (event) => {
       selectedFile.value = event.target.files[0];
     };
 
+    // Update total amount ketika ada perubahan pada amount
     const updateTotalAmount = () => {
       totalAmount.value = form.value.amount;
     };
 
+    // Menangani submit form
     const handleSubmit = async () => {
       try {
         const formData = new FormData();
@@ -196,6 +155,7 @@ export default {
           formData.append("attachment", selectedFile.value);
         }
 
+        // Menambahkan semua data form ke formData
         for (const key in form.value) {
           formData.append(key, form.value[key]);
         }
@@ -246,6 +206,7 @@ export default {
       }
     };
 
+    // Menjalankan fetchBudgetRequest saat komponen dimuat
     onMounted(fetchBudgetRequest);
 
     return {

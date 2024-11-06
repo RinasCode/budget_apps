@@ -19,8 +19,13 @@
         <p>Amount: {{ request.amount }}</p>
         <p>Reason: {{ request.reason }}</p>
         <p>Status: {{ request.status }}</p>
+
+        <div v-if="request.status === 'reject-line2' || request.status === 'reject-line3' || request.status === 'reject-line4' || request.status === 'reject-line5'">
+          <p><strong>Comments: </strong>{{ request.comments || 'Cek budget Limit bulan ini' }}</p>
+        </div>
+
         <button
-          v-if="request.status ==='reject-line2'||request.status ==='reject-line3'||request.status ==='reject-line4' || request.status ==='reject-line5' && isEmployeeLevelOne"
+          v-if="(request.status === 'reject-line2' || request.status === 'reject-line3' || request.status === 'reject-line4' || request.status === 'reject-line5') && isEmployeeLevelOne"
           @click="editBudgetRequest(request)"
           class="btn btn-warning mt-2"
         >
@@ -79,14 +84,14 @@ export default {
     const editBudgetRequest = (request) => {
       router.push({
         name: "EditBudgetRequest",
-        params: { id: request.idString }, 
+        params: { id: request.idString },
       });
     };
 
     onMounted(() => {
       fetchBudgetRequests();
       const user = JSON.parse(localStorage.getItem("user"));
-      isEmployeeLevelOne.value = user && user.levelNumber === 1; 
+      isEmployeeLevelOne.value = user && user.levelNumber === 1;
     });
 
     return {
