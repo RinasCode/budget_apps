@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
 import Approval from "../views/Approval.vue";
 import UserList from "../views/UserList.vue";
 import AddUser from "../views/AddUser.vue";
@@ -9,10 +8,11 @@ import AddBudget from "../views/AddBudget.vue";
 import AllBudgetRequest from "../views/AllBudgetRequest.vue";
 import CreateApproval from "../views/CreateApproval.vue";
 import EditBudgetRequest from "../views/EditBudgetRequest.VUE";
+import EditUser from "../views/EditUser.vue";
 
 const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  return user && user.role === "admin";
+  return user && user.roleString === "admin";
 };
 
 const isAuthenticated = () => {
@@ -25,18 +25,6 @@ const routes = [
     path: "/",
     name: "Login",
     component: Login,
-  },
-  {
-    path: "/register",
-    name: "Register",
-    component: Register,
-    beforeEnter: (to, from, next) => {
-      if (isAdmin()) {
-        next();
-      } else {
-        next({ name: "Login" });
-      }
-    },
   },
   {
     path: "/approval",
@@ -54,11 +42,30 @@ const routes = [
     path: "/users",
     name: "UserList",
     component: UserList,
+    beforeEnter: (to, from, next) => {
+      if (isAdmin()) {
+        next();
+      } else {
+        next({ name: "Login" });
+      }
+    },
   },
   {
     path: "/add-user",
     name: "AddUser",
     component: AddUser,
+    beforeEnter: (to, from, next) => {
+      if (isAdmin()) {
+        next();
+      } else {
+        next({ name: "UserList" });
+      }
+    },
+  },
+  {
+    path: "/users/edit/:id",
+    name: "EditUser",
+    component: EditUser,
     beforeEnter: (to, from, next) => {
       if (isAdmin()) {
         next();
@@ -114,7 +121,7 @@ const routes = [
         next({ name: "Login" });
       }
     },
-  },  
+  },
   {
     path: "/add-budget-request",
     name: "AddBudgetRequest",

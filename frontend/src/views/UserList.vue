@@ -1,7 +1,12 @@
 <template>
   <div class="p-8 bg-gray-100 min-h-screen">
-    <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800">Daftar Pengguna</h1>
-    <button @click="logout" class="bg-red-300 text-gray-800 py-2 px-4 rounded shadow hover:bg-gray-400 mb-4 float-right">
+    <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800">
+      Daftar Pengguna
+    </h1>
+    <button
+      @click="logout"
+      class="bg-red-300 text-gray-800 py-2 px-4 rounded shadow hover:bg-gray-400 mb-4 float-right"
+    >
       Logout
     </button>
     <div class="overflow-x-auto">
@@ -18,7 +23,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.idString" class="border-b hover:bg-gray-100">
+          <tr
+            v-for="user in users"
+            :key="user.idString"
+            class="border-b hover:bg-gray-100"
+          >
             <td class="py-2 px-4 text-sm text-gray-700">{{ user.idString }}</td>
             <td class="py-2 px-4 text-sm text-gray-700">{{ user.nameString }}</td>
             <td class="py-2 px-4 text-sm text-gray-700">{{ user.emailString }}</td>
@@ -26,14 +35,29 @@
             <td class="py-2 px-4 text-sm text-gray-700">{{ user.departmentIDString }}</td>
             <td class="py-2 px-4 text-sm text-gray-700">{{ user.roleString }}</td>
             <td class="py-2 px-4">
-              <button @click="editUser(user.idString)" class="bg-green-500 text-white py-1 px-2 rounded shadow hover:bg-green-600">Edit</button>
-              <button @click="deleteUser(user.idString)" class="bg-red-300 text-gray-800 py-1 px-2 rounded shadow hover:bg-red-400 ml-2">Hapus</button>
+              <button
+                v-if="user.roleString !== 'admin'"
+                @click="editUser(user.idString)"
+                class="bg-green-500 text-white py-1 px-2 rounded shadow hover:bg-green-600"
+              >
+                Edit
+              </button>
+              <button
+                v-if="user.roleString !== 'admin'"
+                @click="deleteUser(user.idString)"
+                class="bg-red-300 text-gray-800 py-1 px-2 rounded shadow hover:bg-red-400 ml-2"
+              >
+                Hapus
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <button @click="addUser" class="bg-blue-600 text-white py-2 px-4 rounded shadow hover:bg-blue-700 mt-6">
+    <button
+      @click="addUser"
+      class="bg-blue-600 text-white py-2 px-4 rounded shadow hover:bg-blue-700 mt-6"
+    >
       Tambah Pengguna
     </button>
   </div>
@@ -59,35 +83,39 @@ export default {
       }
     };
 
-    const deleteUser = async (id) => {
+    const editUser = (idString) => {
+      router.push(`/users/edit/${idString}`); 
+    };
+
+    const deleteUser = async (idString) => {
       try {
-        await axios.delete(`http://localhost:3000/users/${id}`);
+        await axios.delete(`http://localhost:3000/users/${idString}`);
         fetchUsers();
       } catch (error) {
         console.error("Error deleting user:", error);
       }
     };
 
-    const editUser = (id) => {
-      router.push({ name: "AddUser", query: { id } });
-    };
-
     const addUser = () => {
-      router.push({ name: "AddUser" });
+      router.push("/add-user");
     };
-
+    
     const logout = () => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      router.push({ name: "Login" });
-      console.log("User logged out");
+
+      router.push("/");
     };
 
     fetchUsers();
 
-    return { users, deleteUser, editUser, addUser, logout };
+    return {
+      users,
+      editUser,
+      deleteUser,
+      addUser,
+      logout
+    };
   },
 };
 </script>
-
-
